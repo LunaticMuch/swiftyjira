@@ -1,0 +1,21 @@
+name: Release
+
+on:
+  workflow_dispatch
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Main
+        uses: actions/checkout@v4
+
+      - name: Release
+        uses: fdiesel/release-action@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }} 
+          phase: prod 
