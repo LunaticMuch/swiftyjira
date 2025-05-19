@@ -38,7 +38,7 @@ public class SwiftyJIRA {
         case invalidResponse
         case serverError(statusCode: Int)
         case decodingError(Error)
-        
+
         public static func == (lhs: JIRAError, rhs: JIRAError) -> Bool {
             switch (lhs, rhs) {
             case (.invalidURL, .invalidURL):
@@ -55,9 +55,4 @@ public class SwiftyJIRA {
         }
     }
 
-    // ServerInfo endpoint implementation
-    public func getServerInfo() async throws -> ServerInfo {
-        let json: JSON = try await makeRequest(path: "rest/api/2/serverInfo")
-        return try ServerInfo(json: json)
-    }
 }
