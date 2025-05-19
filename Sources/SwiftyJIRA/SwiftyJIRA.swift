@@ -12,26 +12,35 @@ public class SwiftyJIRA {
         self.authToken = authToken
     }
 
-    public func makeRequest(path: String) async throws -> JSON {
-        let url = baseURL.appendingPathComponent(path)
-        var request = URLRequest(url: url)
-        request.setValue("Bearer \(authToken)", forHTTPHeaderField: "Authorization")
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
-        let (data, response) = try await URLSession.shared.data(for: request)
-
-        guard let httpResponse = response as? HTTPURLResponse else {
-            throw JIRAError.invalidResponse
-        }
-
-        guard 200...299 ~= httpResponse.statusCode else {
-            throw JIRAError.serverError(statusCode: httpResponse.statusCode)
-        }
-
-        // Parse with SwiftyJSON
-        let json = try JSON(data: data)
-        return json
+public func makeRequest(path: String, queryItems: [URLQueryItem]? = nil) async throws -> JSON {
+    var components = URLComponents()
+    components.scheme = baseURL.scheme
+    components.host = baseURL.host
+    components.path = baseURL.path + "/" + path
+    components.queryItems = queryItems
+    
+    guard let url = components.url else {
+        throw JIRAError.invalidURL
     }
+    
+    var request = URLRequest(url: url)
+    request.setValue("Bearer \(authToken)", forHTTPHeaderField: "Authorization")
+    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+    let (data, response) = try await URLSession.shared.data(for: request)
+
+    guard let httpResponse = response as? HTTPURLResponse else {
+        throw JIRAError.invalidResponse
+    }
+
+    guard 200...299 ~= httpResponse.statusCode else {
+        throw JIRAError.serverError(statusCode: httpResponse.statusCode)
+    }
+
+    // Parse with SwiftyJSON
+    let json = try JSON(data: data)
+    return json
+}
 
     public enum JIRAError: Error, Equatable {
         case invalidURL
