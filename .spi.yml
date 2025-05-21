@@ -1,0 +1,36 @@
+version: 1
+builder:
+  configs:
+    - platform: ios
+      swift_version: 5.5
+    - platform: macos
+      swift_version: 5.5
+    - platform: tvos
+      swift_version: 5.5
+    - platform: watchos
+      swift_version: 5.5
+metadata:
+  authors: Stefano Cislaghi
+  categories:
+    - networking
+    - api-clients
+  concepts:
+    - name: JIRA API Access
+      description: Provides convenient access to the JIRA REST API v2 with strongly-typed models
+    - name: Authentication
+      description: Support for token-based authentication with JIRA
+  documentation: https://github.com/lunaticmuch/swiftyjira
+  examples:
+    - title: Getting Server Information
+      code: |
+        let jira = try SwiftyJIRA(baseURL: "https://your-jira.atlassian.net", authToken: "token")
+        let info = try await jira.getServerInfo()
+    - title: Fetching an Issue
+      code: |
+        let issue = try await jira.getIssue(issueIdOrKey: "PROJ-123")
+  keywords:
+    - jira
+    - atlassian
+  license: MIT
+  summary: A lightweight Swift package for interacting with the JIRA REST API v2
+  website: https://github.com/lunaticmuch/swiftyjira
